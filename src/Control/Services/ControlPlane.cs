@@ -26,8 +26,8 @@ public class ControlPlane(AgentRegistry registry, ILogger<ControlPlane> log) : C
         }
         finally
         {
-            registry.Remove(agentId);
-            log.LogInformation("Agent {AgentId} removed from registry.", agentId);
+            log.LogInformation("Removing agent {AgentId} from registry.", agentId);
+            registry.RemoveIfExists(agentId);
         }
     }
 }

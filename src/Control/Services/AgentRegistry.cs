@@ -2,20 +2,27 @@ using System.Collections.Concurrent;
 
 namespace Control.Services;
 
-public class AgentRegistry
+public class AgentRegistry(ILogger<AgentRegistry> log)
 {
     private readonly ConcurrentDictionary<string, ConnectedAgent> _agents = new();
 
     public void AddOrUpdate(ConnectedAgent agent)
     {
+        log.LogInformation("Adding agent to registry");
         _agents[agent.Id] = agent;
     }
 
-    public bool TryGet(string agentId, out ConnectedAgent? agent)
-        => _agents.TryGetValue(agentId, out agent);
-
     public IEnumerable<ConnectedAgent> All() => _agents.Values;
 
-    public void Remove(string agentId)
-        => _agents.TryRemove(agentId, out _);
+    public void RemoveIfExists(string agentId)
+    {
+        if (_agents.TryRemove(agentId, out _))
+        {
+            log.LogInformation("Removing agent {AgentId} from registry, removed.", agentId);
+        }
+        else
+        {
+            log.LogInformation("Removing agent {AgentId} from registry, not found.", agentId);
+        }
+    }
 }

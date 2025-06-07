@@ -15,6 +15,11 @@ builder.WebHost.ConfigureKestrel(options =>
     // gRPC (HTTP/2 + TLS on port 5001)
     options.ListenAnyIP(5001, listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; });
 });
+builder.Services.AddLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.AddSimpleConsole(x => { x.SingleLine = true; });
+});
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.TypeInfoResolverChain.Add(AotJsonContext.Default);
