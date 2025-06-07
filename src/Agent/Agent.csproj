@@ -11,6 +11,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Using Include="Grpc.Core"/>
+    <Using Include="Grpc.Net.Client"/>
+    <Using Include="Microsoft.Extensions.DependencyInjection"/>
+    <Using Include="Microsoft.Extensions.Logging"/>
+    <Using Include="Microsoft.Extensions.Options"/>
     <Using Include="Protocol" />
   </ItemGroup>
   
@@ -22,10 +27,6 @@
     <PackageReference Include="Docker.DotNet"/>
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Protocol\Protocol.csproj" />
   </ItemGroup>
 
 </Project>

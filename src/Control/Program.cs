@@ -1,12 +1,30 @@
-﻿using Microsoft.AspNetCore.Server.Kestrel.Core;
+﻿using Control.Infrastructure;
+using Control.Services;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<AgentRegistry>();
+builder.Services.AddScoped<AgentQueue>();
+builder.Services.AddHostedService<AgentRegistryMonitor>();
 builder.Services.AddGrpc();
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(5000, o => o.Protocols = HttpProtocols.Http2); // <-- Force HTTP/2
-});
+    // REST API (HTTP/1.1 only, no TLS)
+    options.ListenAnyIP(5000, listenOptions => { listenOptions.Protocols = HttpProtocols.Http1; });
 
+    // gRPC (HTTP/2 + TLS on port 5001)
+    options.ListenAnyIP(5001, listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; });
+});
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.TypeInfoResolverChain.Add(AotJsonContext.Default);
+});
 var app = builder.Build();
-app.MapGrpcService<ControlPlaneService>();
+app.MapGrpcService<ControlPlane>();
+
+app.MapPost("/api/agents/ping", async (AgentQueue queue) =>
+{
+    await queue.PingAllAsync();
+    return Results.Ok("Agents pinged.");
+});
 app.Run();

@@ -4,15 +4,16 @@ package paas;
 
 option csharp_namespace = "Protocol";
 
-service ControlPlane {
+service ControlPlaneProtocol {
   // Bi-directional stream: Agent sends messages and receives commands
-  rpc Connect (stream AgentMessage) returns (stream ControlCommand);
+  rpc Connect(stream AgentMessage) returns (stream ControlCommand);
 }
 
 // Top-level message sent from agent to control plane
 message AgentMessage {
   oneof payload {
     AgentHandshake handshake = 1;
+    PongReply ping = 2;
   }
 }
 
@@ -25,15 +26,20 @@ message AgentHandshake {
   repeated string tags = 6;
 }
 
+message PongReply {}
+
 // Commands sent from control plane to agent
 message ControlCommand {
-  string type = 1; // e.g., "deploy", "stop", etc.
+  string type = 1;  // e.g., "deploy", "stop", etc.
 
   oneof payload {
-    DeployCommand deploy = 2;
-    StopCommand stop = 3;
+    PingCommand ping = 10;
+    DeployCommand deploy = 11;
+    StopCommand stop = 12;
   }
 }
+
+message PingCommand {}
 
 message DeployCommand {
   string app_id = 1;

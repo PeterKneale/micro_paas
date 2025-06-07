@@ -1,11 +1,10 @@
-﻿
-
-using Agent;
-using Agent.Handlers;
+﻿using Agent.Handlers;
+using Agent.Services;
 using Docker.DotNet;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+
+const string url = "http://localhost:5001";
+var token = args[0];
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
@@ -15,21 +14,26 @@ var host = Host.CreateDefaultBuilder(args)
 
         // Register all ICommandHandler implementations
         services.AddSingleton<ICommandHandler, DeployCommandHandler>();
-        // services.AddSingleton<ICommandHandler, StopCommandHandler>(); // (when implemented)
 
-        // Register AgentClient with constructor dependencies
-        services.AddSingleton<AgentClient>(provider =>
-        {
-            var logger = provider.GetRequiredService<ILogger<AgentClient>>();
-            return new AgentClient("http://localhost:5000", "agent-token", logger);
-        });
+        // Register AgentClient and config
+        services.AddSingleton<AgentClient>();
+        services.AddSingleton<AgentOptions>(_ => new AgentOptions(url, token));
     })
     .ConfigureLogging(logging =>
     {
         logging.ClearProviders();
-        logging.AddConsole();
+        logging.AddSimpleConsole(x => { x.SingleLine = true; });
     })
     .Build();
 
+var log = host.Services.GetRequiredService<ILogger<Program>>();
 var client = host.Services.GetRequiredService<AgentClient>();
-await client.StartAsync(CancellationToken.None);
+try
+{
+    await client.StartAsync(CancellationToken.None);
+}
+catch (RpcException ex) when (ex.StatusCode == StatusCode.Unavailable)
+{
+    log.LogError("Failed to connect to control plane on {url}. Is the server running?", url);
+    Environment.Exit(2);
+}
