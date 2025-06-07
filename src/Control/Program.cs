@@ -9,10 +9,9 @@ builder.Services.AddHostedService<AgentRegistryMonitor>();
 builder.Services.AddGrpc();
 builder.WebHost.ConfigureKestrel(options =>
 {
-    // REST API (HTTP/1.1 only, no TLS)
+    // REST API
     options.ListenAnyIP(5000, listenOptions => { listenOptions.Protocols = HttpProtocols.Http1; });
-
-    // gRPC (HTTP/2 + TLS on port 5001)
+    // gRPC
     options.ListenAnyIP(5001, listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; });
 });
 builder.Services.AddLogging(logging =>

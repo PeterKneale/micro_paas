@@ -1,7 +1,10 @@
 namespace Agent.Services;
 
-public class AgentClient(AgentOptions options, ILogger<AgentClient> log)
+public class AgentClient(AgentOptions options, AgentIdProvider ids, ILogger<AgentClient> log)
 {
+    private IClientStreamWriter<AgentMessage>? _requestStream;
+    private readonly SemaphoreSlim _writeLock = new(1, 1);
+
     public async Task StartAsync(CancellationToken cancel)
     {
         log.LogInformation("Connecting to {url} with token {token} ", options.ControlPlaneUrl, options.AgentToken);
@@ -11,27 +14,76 @@ public class AgentClient(AgentOptions options, ILogger<AgentClient> log)
         var metadata = new Metadata { { "authorization", $"Bearer {options.AgentToken}" } };
 
         using var call = client.Connect(metadata, cancellationToken: cancel);
+        _requestStream = call.RequestStream;
 
-        await SendHandshake(call, cancel);
-
-        await foreach (var command in call.ResponseStream.ReadAllAsync(cancel))
+        await WriteAsync(new AgentMessage
         {
-            log.LogInformation("Received command: {Type}", command.Type);
+            Handshake = new AgentHandshake { Id = ids.GetAgentId() }
+        }, cancel);
+
+        try
+        {
+            await foreach (var command in call.ResponseStream.ReadAllAsync(cancel))
+            {
+                log.LogInformation("Received command: {Type}", command);
+                if (command != null)
+                {
+                    log.LogInformation("Sending pong");
+                    await WriteAsync(new AgentMessage
+                    {
+                        Pong = new AgentPong()
+                    }, cancel);
+                }
+            }
         }
+        catch (RpcException ex) when (ex.StatusCode == StatusCode.Cancelled)
+        {
+            log.LogInformation("gRPC stream cancelled — shutting down agent");
+        }
+        catch (Exception ex)
+        {
+            log.LogError(ex, "Unexpected error while reading command stream");
+        } 
     }
 
-    private async Task SendHandshake(AsyncDuplexStreamingCall<AgentMessage, ControlCommand> call,
-        CancellationToken cancel)
+    public bool IsConnected => _requestStream != null;
+
+    public async Task SendHeartbeatAsync(CancellationToken cancellationToken = default)
     {
-        log.LogInformation($"Sending handshake (Token: {options.AgentToken})");
-        await call.RequestStream.WriteAsync(new AgentMessage
+        await WriteAsync(new AgentMessage { Heartbeat = new AgentHeartbeat() }, cancellationToken);
+    }
+
+    public async Task SendDisconnectAsync(string reason, CancellationToken cancellationToken)
+    {
+        try
         {
-            Handshake = new AgentHandshake
+            await WriteAsync(new AgentMessage
             {
-                Hostname = Environment.MachineName,
-                Os = Environment.OSVersion.ToString(),
-                AgentVersion = "0.1.0"
-            }
-        }, cancel);
+                Shutdown = new AgentShutdown { Reason = reason }
+            }, cancellationToken);
+        }
+        catch (Exception e)
+        {
+            log.LogError(e, "error attempting to send shutdown");
+        }
+
+        // closes the client stream gracefully
+        if (_requestStream != null)
+            await _requestStream.CompleteAsync();
+    }
+
+    private async Task WriteAsync(AgentMessage message, CancellationToken cancellationToken)
+    {
+        if (_requestStream is null) throw new InvalidOperationException("The connection is closed.");
+
+        await _writeLock.WaitAsync(cancellationToken);
+        try
+        {
+            await _requestStream.WriteAsync(message, cancellationToken);
+        }
+        finally
+        {
+            _writeLock.Release();
+        }
     }
 }

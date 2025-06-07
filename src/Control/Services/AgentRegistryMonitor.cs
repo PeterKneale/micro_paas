@@ -3,7 +3,7 @@ namespace Control.Services;
 public class AgentRegistryMonitor(AgentRegistry registry, ILogger<AgentRegistryMonitor> logger)
     : BackgroundService
 {
-    private static readonly TimeSpan Interval = TimeSpan.FromSeconds(10);
+    private static readonly TimeSpan Interval = TimeSpan.FromSeconds(1);
     
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -12,10 +12,10 @@ public class AgentRegistryMonitor(AgentRegistry registry, ILogger<AgentRegistryM
             var agents = registry.All().ToList();
             var count = agents.Count;
             
-            logger.LogInformation("Connected agents: {Count}", count);
+            logger.LogDebug("Connected agents: {Count}", count);
             foreach (var agent in agents)
             {
-                logger.LogInformation($"Agent {agent.Id} {agent.Hostname}");
+                logger.LogTrace($"Agent {agent.Id}");
             }
             await Task.Delay(Interval, stoppingToken);
         }

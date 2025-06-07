@@ -9,46 +9,33 @@ service ControlPlaneProtocol {
   rpc Connect(stream AgentMessage) returns (stream ControlCommand);
 }
 
-// Top-level message sent from agent to control plane
+// Commands sent from control plane to agent
+message ControlCommand {
+  string type = 1;  // e.g., "ping", "deploy", "stop", etc.
+
+  oneof payload {
+    ControlPing ping = 10;
+  }
+}
+
+message ControlPing {}
+
+// Message sent from agent to control plane
 message AgentMessage {
   oneof payload {
     AgentHandshake handshake = 1;
-    PongReply ping = 2;
+    AgentShutdown shutdown = 2;
+    AgentHeartbeat heartbeat = 3;
+    AgentPong pong = 4;
   }
 }
 
 message AgentHandshake {
-  string hostname = 1;
-  string os = 2;
-  string arch = 3;
-  string docker_version = 4;
-  string agent_version = 5;
-  repeated string tags = 6;
+  string id = 1;
 }
-
-message PongReply {}
-
-// Commands sent from control plane to agent
-message ControlCommand {
-  string type = 1;  // e.g., "deploy", "stop", etc.
-
-  oneof payload {
-    PingCommand ping = 10;
-    DeployCommand deploy = 11;
-    StopCommand stop = 12;
-  }
+message AgentShutdown {
+  string reason = 1;
 }
+message AgentHeartbeat {}
+message AgentPong {}
 
-message PingCommand {}
-
-message DeployCommand {
-  string app_id = 1;
-  string docker_image = 2;
-  map<string, string> env = 3;
-  repeated uint32 ports = 4;
-  string healthcheck_path = 5;
-}
-
-message StopCommand {
-  string app_id = 1;
-}

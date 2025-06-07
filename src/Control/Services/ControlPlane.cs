@@ -6,28 +6,26 @@ public class ControlPlane(AgentRegistry registry, ILogger<ControlPlane> log) : C
 {
     public override async Task Connect(IAsyncStreamReader<AgentMessage> request,IServerStreamWriter<ControlCommand> response, ServerCallContext context)
     {
-        var agentId = AgentIdGenerator.Generate();
-        
-        try
+        await foreach (var message in request.ReadAllAsync(context.CancellationToken))
         {
-            await foreach (var message in request.ReadAllAsync(context.CancellationToken))
+            if (message.Handshake is not null)
             {
-                if (message.Handshake is not null)
-                {
-                    log.LogInformation("Handshake from: Agent {agentId} {Hostname}",agentId, message.Handshake.Hostname);
-                    var agent = ConnectedAgent.CreateInstance(message.Handshake, response);
-                    registry.AddOrUpdate(agent);
-                }
+                log.LogInformation("Handshake");
+                var agent = ConnectedAgent.CreateInstance(message.Handshake, response);
+                registry.AddOrUpdate(agent);
+            }
+
+            if (message.Heartbeat is not null)
+            {
+                log.LogInformation("Heartbeat");
+            }
+
+            if (message.Pong is not null)
+            {
+                log.LogInformation("Pong");
             }
         }
-        catch (RpcException ex) when (ex.StatusCode == StatusCode.Cancelled)
-        {
-            log.LogInformation("Agent {AgentId} disconnected.", agentId);
-        }
-        finally
-        {
-            log.LogInformation("Removing agent {AgentId} from registry.", agentId);
-            registry.RemoveIfExists(agentId);
-        }
     }
+    
+    
 }

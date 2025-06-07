@@ -6,7 +6,8 @@ using Microsoft.Extensions.Hosting;
 const string url = "http://localhost:5001";
 var token = args[0];
 
-var host = Host.CreateDefaultBuilder(args)
+var host = Host
+    .CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
         // Create Docker client
@@ -18,6 +19,10 @@ var host = Host.CreateDefaultBuilder(args)
         // Register AgentClient and config
         services.AddSingleton<AgentClient>();
         services.AddSingleton<AgentOptions>(_ => new AgentOptions(url, token));
+        services.AddSingleton<AgentIdProvider>();
+
+        services.AddHostedService<AgentClientService>();
+        services.AddHostedService<AgentHeartbeatService>();
     })
     .ConfigureLogging(logging =>
     {
@@ -25,15 +30,4 @@ var host = Host.CreateDefaultBuilder(args)
         logging.AddSimpleConsole(x => { x.SingleLine = true; });
     })
     .Build();
-
-var log = host.Services.GetRequiredService<ILogger<Program>>();
-var client = host.Services.GetRequiredService<AgentClient>();
-try
-{
-    await client.StartAsync(CancellationToken.None);
-}
-catch (RpcException ex) when (ex.StatusCode == StatusCode.Unavailable)
-{
-    log.LogError("Failed to connect to control plane on {url}. Is the server running?", url);
-    Environment.Exit(2);
-}
+await host.RunAsync();

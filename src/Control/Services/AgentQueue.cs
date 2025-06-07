@@ -15,7 +15,7 @@ public class AgentQueue(AgentRegistry registry, ILogger<AgentQueue> log)
             log.LogInformation("Pinging {AgentId}", agent.Id);
             var command = new ControlCommand
             {
-                Type = "ping"
+                Type = "ping", Ping = new ControlPing()
             };
             await agent.CommandStream.WriteAsync(command);
         }
