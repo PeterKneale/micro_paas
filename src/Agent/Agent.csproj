@@ -6,10 +6,25 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PublishAot>true</PublishAot>
-    <SelfContained>true</SelfContained>
     <InvariantGlobalization>true</InvariantGlobalization>
-    <TrimMode>full</TrimMode>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <SelfContained>true</SelfContained>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="Protocol" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Protocol\Protocol.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Docker.DotNet"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Protocol\Protocol.csproj" />
+  </ItemGroup>
 
 </Project>

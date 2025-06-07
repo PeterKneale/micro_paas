@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package paas;
+
+option csharp_namespace = "Protocol";
+
+service ControlPlane {
+  // Bi-directional stream: Agent sends messages and receives commands
+  rpc Connect (stream AgentMessage) returns (stream ControlCommand);
+}
+
+// Top-level message sent from agent to control plane
+message AgentMessage {
+  oneof payload {
+    AgentHandshake handshake = 1;
+  }
+}
+
+message AgentHandshake {
+  string hostname = 1;
+  string os = 2;
+  string arch = 3;
+  string docker_version = 4;
+  string agent_version = 5;
+  repeated string tags = 6;
+}
+
+// Commands sent from control plane to agent
+message ControlCommand {
+  string type = 1; // e.g., "deploy", "stop", etc.
+
+  oneof payload {
+    DeployCommand deploy = 2;
+    StopCommand stop = 3;
+  }
+}
+
+message DeployCommand {
+  string app_id = 1;
+  string docker_image = 2;
+  map<string, string> env = 3;
+  repeated uint32 ports = 4;
+  string healthcheck_path = 5;
+}
+
+message StopCommand {
+  string app_id = 1;
+}

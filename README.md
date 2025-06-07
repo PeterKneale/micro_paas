@@ -1,5 +1,10 @@
-## Build a native binary for apple silicon (while on apple silicon)
+## Building the agent binary
+- native
+- aot
+- self-contained
+
 ```sh
-dotnet publish src/Agent/Agent.csproj -c Release --self-contained true /p:PublishAot=true -o publish
+dotnet publish src/Agent/Agent.csproj -c Release -o publish
+ls -lah publish
 ./publish/Agent
 ```

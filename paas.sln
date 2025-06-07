@@ -17,6 +17,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{0E26FB
 		.dockerignore = .dockerignore
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{5A94C098-5A9D-4730-834D-AB23C049371B}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Control", "src\Control\Control.csproj", "{D701B01A-1CAF-4987-9712-7BE9D31C442D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protocol", "src\Protocol\Protocol.csproj", "{7A2C1BD1-1E1D-4330-A13D-22E10B9D2AFE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deps", "deps", "{16E93FAF-F06B-4AE6-AA2C-A0DB61C06F29}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,8 +44,18 @@ Global
 		{6E55C713-CF8F-44C1-AAE8-2EC85A4BCEBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E55C713-CF8F-44C1-AAE8-2EC85A4BCEBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E55C713-CF8F-44C1-AAE8-2EC85A4BCEBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D701B01A-1CAF-4987-9712-7BE9D31C442D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D701B01A-1CAF-4987-9712-7BE9D31C442D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D701B01A-1CAF-4987-9712-7BE9D31C442D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D701B01A-1CAF-4987-9712-7BE9D31C442D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A2C1BD1-1E1D-4330-A13D-22E10B9D2AFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A2C1BD1-1E1D-4330-A13D-22E10B9D2AFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A2C1BD1-1E1D-4330-A13D-22E10B9D2AFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A2C1BD1-1E1D-4330-A13D-22E10B9D2AFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6E55C713-CF8F-44C1-AAE8-2EC85A4BCEBD} = {AD0CF0EB-A492-4BB5-BD21-96734E247F4D}
+		{D701B01A-1CAF-4987-9712-7BE9D31C442D} = {AD0CF0EB-A492-4BB5-BD21-96734E247F4D}
+		{7A2C1BD1-1E1D-4330-A13D-22E10B9D2AFE} = {AD0CF0EB-A492-4BB5-BD21-96734E247F4D}
 	EndGlobalSection
 EndGlobal
