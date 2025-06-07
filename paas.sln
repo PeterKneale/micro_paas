@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AD0CF0EB-A492-4BB5-BD21-96734E247F4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agent", "src\Agent\Agent.csproj", "{6E55C713-CF8F-44C1-AAE8-2EC85A4BCEBD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{2DA54C9C-ADCD-470B-9E34-A6A1CBC3F3E2}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{0E26FBC1-C53B-4B1F-BE41-F6F466A82DDE}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6E55C713-CF8F-44C1-AAE8-2EC85A4BCEBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E55C713-CF8F-44C1-AAE8-2EC85A4BCEBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E55C713-CF8F-44C1-AAE8-2EC85A4BCEBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E55C713-CF8F-44C1-AAE8-2EC85A4BCEBD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6E55C713-CF8F-44C1-AAE8-2EC85A4BCEBD} = {AD0CF0EB-A492-4BB5-BD21-96734E247F4D}
+	EndGlobalSection
+EndGlobal
