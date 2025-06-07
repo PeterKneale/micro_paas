@@ -20,6 +20,7 @@
   
   <ItemGroup>
     <PackageReference Include="Docker.DotNet"/>
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
 
