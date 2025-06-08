@@ -9,18 +9,16 @@ public class AgentClient(AgentOptions options, AgentIdProvider ids, ILogger<Agen
 
     public async Task StartAsync(CancellationToken cancel)
     {
-        log.LogInformation("Connecting to {url} with token {token} ", options.ControlPlaneUrl, options.AgentToken);
+        log.LogInformation("Connecting to {url} as instance {token} ", options.ControlPlaneUrl, options.AgentInstance);
         var channel = GrpcChannel.ForAddress(options.ControlPlaneUrl);
         var client = new ControlPlaneProtocol.ControlPlaneProtocolClient(channel);
 
-        var metadata = new Metadata { { "authorization", $"Bearer {options.AgentToken}" } };
-
-        using var call = client.Connect(metadata, cancellationToken: cancel);
+        using var call = client.Connect(cancellationToken: cancel);
         _requestStream = call.RequestStream;
 
         await WriteAsync(new AgentMessage
         {
-            Handshake = new AgentHandshake { Id = ids.GetAgentId() }
+            Handshake = new AgentHandshake { Id = ids.GetAgentId(options.AgentInstance) }
         }, cancel);
 
         try

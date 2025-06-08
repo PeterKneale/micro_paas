@@ -1,25 +1,35 @@
+using ControlPlane.Services.Handlers;
 using Grpc.Core;
 
 namespace ControlPlane.Services;
 
-public class ControlPlane(AgentRegistry registry, ILogger<ControlPlane> log)
+public class ControlPlane(IEnumerable<IAgentMessageHandler> handlers, ILogger<ControlPlane> log)
     : ControlPlaneProtocol.ControlPlaneProtocolBase
 {
     public override async Task Connect(IAsyncStreamReader<AgentMessage> request,
         IServerStreamWriter<ControlCommand> response, ServerCallContext context)
     {
+        var messageContext = new AgentMessageContext(response);
         await foreach (var message in request.ReadAllAsync(context.CancellationToken))
         {
-            if (message.Handshake is not null)
+            var handled = false;
+            foreach (var handler in handlers)
             {
-                log.LogInformation("Handshake");
-                var agent = ConnectedAgent.CreateInstance(message.Handshake, response);
-                registry.AddOrUpdate(agent);
+                if (!handler.CanHandle(message))
+                {
+                    continue;
+                }
+
+                log.LogDebug($"Handling with {handler.GetType().Name}");
+                await handler.HandleAsync(message, messageContext);
+                handled = true;
+                break;
             }
 
-            if (message.Heartbeat is not null) log.LogInformation("Heartbeat");
-
-            if (message.Pong is not null) log.LogInformation("Pong");
+            if (!handled)
+            {
+                log.LogWarning("Unknown message received");
+            }
         }
     }
 }

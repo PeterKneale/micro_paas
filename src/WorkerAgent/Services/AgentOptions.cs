@@ -1,3 +1,3 @@
 namespace WorkerAgent.Services;
 
-public record AgentOptions(string ControlPlaneUrl, string AgentToken);
+public record AgentOptions(string ControlPlaneUrl, string AgentInstance);

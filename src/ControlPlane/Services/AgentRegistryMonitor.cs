@@ -13,7 +13,10 @@ public class AgentRegistryMonitor(AgentRegistry registry, ILogger<AgentRegistryM
             var count = agents.Count;
 
             logger.LogDebug("Connected agents: {Count}", count);
-            foreach (var agent in agents) logger.LogTrace($"WorkerAgent {agent.Id}");
+            foreach (var agent in agents)
+            {
+                logger.LogDebug($"Agent: {agent}");
+            }
             await Task.Delay(Interval, stoppingToken);
         }
     }

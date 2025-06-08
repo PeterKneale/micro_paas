@@ -1,8 +1,12 @@
 ﻿using ControlPlane.Services;
+using ControlPlane.Services.Handlers;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<AgentRegistry>();
+builder.Services.AddSingleton<IAgentMessageHandler, HandshakeMessageHandler>();
+builder.Services.AddSingleton<IAgentMessageHandler, ShutdownMessageHandler>();
+builder.Services.AddSingleton<IAgentMessageHandler, HeartbeatMessageHandler>();
 builder.Services.AddScoped<AgentQueue>();
 builder.Services.AddHostedService<AgentRegistryMonitor>();
 builder.Services.AddGrpc();
