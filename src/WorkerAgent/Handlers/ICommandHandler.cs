@@ -1,6 +1,5 @@
-namespace Agent.Handlers;
+namespace WorkerAgent.Handlers;
 
 public interface ICommandHandler
 {
-    
 }

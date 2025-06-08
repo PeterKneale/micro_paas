@@ -1,4 +1,4 @@
-using Control.Services;
+namespace ControlPlane.Services;
 
 public class AgentQueue(AgentRegistry registry, ILogger<AgentQueue> log)
 {
@@ -10,12 +10,13 @@ public class AgentQueue(AgentRegistry registry, ILogger<AgentQueue> log)
             log.LogInformation("No agents to ping");
             return;
         }
+
         foreach (var agent in agents)
         {
             log.LogInformation("Pinging {AgentId}", agent.Id);
             var command = new ControlCommand
             {
-                Type = "ping", Ping = new ControlPing()
+                Ping = new ControlPing()
             };
             await agent.CommandStream.WriteAsync(command);
         }

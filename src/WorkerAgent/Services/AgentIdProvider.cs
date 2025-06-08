@@ -1,4 +1,4 @@
-namespace Agent.Services;
+namespace WorkerAgent.Services;
 
 public class AgentIdProvider
 {
@@ -7,10 +7,7 @@ public class AgentIdProvider
 
     public string GetAgentId()
     {
-        if (File.Exists(_path))
-        {
-            return File.ReadAllText(_path).Trim();
-        }
+        if (File.Exists(_path)) return File.ReadAllText(_path).Trim();
 
         var id = Guid.NewGuid().ToString("N");
         File.WriteAllText(_path, id);

@@ -11,8 +11,6 @@ service ControlPlaneProtocol {
 
 // Commands sent from control plane to agent
 message ControlCommand {
-  string type = 1;  // e.g., "ping", "deploy", "stop", etc.
-
   oneof payload {
     ControlPing ping = 10;
   }

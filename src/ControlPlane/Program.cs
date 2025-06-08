@@ -1,5 +1,4 @@
-﻿using Control.Infrastructure;
-using Control.Services;
+﻿using ControlPlane.Services;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,12 +18,8 @@ builder.Services.AddLogging(logging =>
     logging.ClearProviders();
     logging.AddSimpleConsole(x => { x.SingleLine = true; });
 });
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.TypeInfoResolverChain.Add(AotJsonContext.Default);
-});
 var app = builder.Build();
-app.MapGrpcService<ControlPlane>();
+app.MapGrpcService<ControlPlane.Services.ControlPlane>();
 
 app.MapPost("/api/agents/ping", async (AgentQueue queue) =>
 {

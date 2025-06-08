@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Hosting;
 
-namespace Agent.Services;
+namespace WorkerAgent.Services;
 
 public class AgentClientService(AgentClient client, ILogger<AgentClientService> log) : BackgroundService
 {
@@ -13,7 +13,7 @@ public class AgentClientService(AgentClient client, ILogger<AgentClientService> 
     public override async Task StopAsync(CancellationToken cancellationToken)
     {
         log.LogInformation("Stopping");
-        await client.SendDisconnectAsync("Agent shutting down", cancellationToken);
+        await client.SendDisconnectAsync("WorkerAgent shutting down", cancellationToken);
         await base.StopAsync(cancellationToken);
     }
 }

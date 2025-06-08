@@ -1,4 +1,4 @@
-namespace Agent.Handlers;
+namespace WorkerAgent.Handlers;
 
 public class DeployCommandHandler : ICommandHandler
 {

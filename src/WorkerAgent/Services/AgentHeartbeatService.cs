@@ -1,11 +1,11 @@
 using Microsoft.Extensions.Hosting;
 
-namespace Agent.Services;
+namespace WorkerAgent.Services;
 
 public class AgentHeartbeatService(AgentClient client, ILogger<AgentHeartbeatService> log) : BackgroundService
 {
     private static readonly TimeSpan Interval = TimeSpan.FromSeconds(1);
-    
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         log.LogInformation("Starting");
@@ -20,6 +20,7 @@ public class AgentHeartbeatService(AgentClient client, ILogger<AgentHeartbeatSer
             {
                 log.LogDebug("Not connected, not sending heartbeat");
             }
+
             await Task.Delay(Interval, stoppingToken);
         }
     }

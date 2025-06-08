@@ -1,9 +1,11 @@
-namespace Agent.Services;
+namespace WorkerAgent.Services;
 
 public class AgentClient(AgentOptions options, AgentIdProvider ids, ILogger<AgentClient> log)
 {
-    private IClientStreamWriter<AgentMessage>? _requestStream;
     private readonly SemaphoreSlim _writeLock = new(1, 1);
+    private IClientStreamWriter<AgentMessage>? _requestStream;
+
+    public bool IsConnected => _requestStream != null;
 
     public async Task StartAsync(CancellationToken cancel)
     {
@@ -43,10 +45,8 @@ public class AgentClient(AgentOptions options, AgentIdProvider ids, ILogger<Agen
         catch (Exception ex)
         {
             log.LogError(ex, "Unexpected error while reading command stream");
-        } 
+        }
     }
-
-    public bool IsConnected => _requestStream != null;
 
     public async Task SendHeartbeatAsync(CancellationToken cancellationToken = default)
     {

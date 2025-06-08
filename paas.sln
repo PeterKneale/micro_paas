@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AD0CF0EB-A492-4BB5-BD21-96734E247F4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agent", "src\Agent\Agent.csproj", "{6E55C713-CF8F-44C1-AAE8-2EC85A4BCEBD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerAgent", "src\WorkerAgent\WorkerAgent.csproj", "{6E55C713-CF8F-44C1-AAE8-2EC85A4BCEBD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{2DA54C9C-ADCD-470B-9E34-A6A1CBC3F3E2}"
 	ProjectSection(SolutionItems) = preProject
@@ -22,9 +22,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{5A94C0
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Control", "src\Control\Control.csproj", "{D701B01A-1CAF-4987-9712-7BE9D31C442D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlPlane", "src\ControlPlane\ControlPlane.csproj", "{D701B01A-1CAF-4987-9712-7BE9D31C442D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protocol", "src\Protocol\Protocol.csproj", "{7A2C1BD1-1E1D-4330-A13D-22E10B9D2AFE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationsProtocol", "src\CommunicationsProtocol\CommunicationsProtocol.csproj", "{7A2C1BD1-1E1D-4330-A13D-22E10B9D2AFE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deps", "deps", "{16E93FAF-F06B-4AE6-AA2C-A0DB61C06F29}"
 	ProjectSection(SolutionItems) = preProject
