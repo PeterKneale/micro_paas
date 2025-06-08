@@ -1,7 +1,7 @@
 ﻿using Docker.DotNet;
 using Microsoft.Extensions.Hosting;
-using WorkerAgent.Handlers;
-using WorkerAgent.Services;
+using Agent.Handlers;
+using Agent.Services;
 
 const string url = "http://localhost:5001";
 var token = args[0];

@@ -1,4 +1,4 @@
-namespace WorkerAgent.Handlers;
+namespace Agent.Handlers;
 
 public interface ICommandHandler
 {

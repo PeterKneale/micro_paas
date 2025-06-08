@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\CommunicationsProtocol\CommunicationsProtocol.csproj"/>
+        <ProjectReference Include="..\Protocol\Protocol.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Hosting;
 
-namespace WorkerAgent.Services;
+namespace Agent.Services;
 
 public class AgentHeartbeatService(AgentClient client, ILogger<AgentHeartbeatService> log) : BackgroundService
 {

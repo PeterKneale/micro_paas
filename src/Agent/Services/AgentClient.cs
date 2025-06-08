@@ -1,4 +1,4 @@
-namespace WorkerAgent.Services;
+namespace Agent.Services;
 
 public class AgentClient(AgentOptions options, AgentIdProvider ids, ILogger<AgentClient> log)
 {
